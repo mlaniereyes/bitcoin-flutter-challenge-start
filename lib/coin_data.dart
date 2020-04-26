@@ -37,9 +37,9 @@ const apiKey = 'YOUR-API-KEY-HERE';
 class CoinData {
   CoinData();
 
-  Future<dynamic> getCoinData() async {
+  Future<dynamic> getCoinData(String selectedCurrency) async {
     http.Response response =
-        await http.get('$coinAPIURL/BTC/USD?apikey=$apiKey');
+        await http.get('$coinAPIURL/BTC/$selectedCurrency?apikey=$apiKey');
     if (response.statusCode == 200) {
       String data = response.body;
       print('bit coin data = $data');
