@@ -25,29 +25,29 @@ const List<String> currenciesList = [
   'ZAR'
 ];
 
-const List<String> cryptoList = [
-  'BTC',
-  'ETH',
-  'LTC',
-];
+const List<String> cryptoList = ['BTC', 'ETH', 'LTC'];
 
 const coinAPIURL = 'https://rest.coinapi.io/v1/exchangerate';
-const apiKey = 'YOUR-API-KEY-HERE';
+//const apiKey = 'YOUR-API-KEY-HERE';
 
 class CoinData {
   CoinData();
 
-  Future<dynamic> getCoinData(String selectedCurrency) async {
-    http.Response response =
-        await http.get('$coinAPIURL/BTC/$selectedCurrency?apikey=$apiKey');
-    if (response.statusCode == 200) {
-      String data = response.body;
-      print('bit coin data = $data');
-      // print('data ${data}');
+  Future getCoinData(String selectedCurrency) async {
+    Map<String, String> cryptoPrices = {};
 
-      return jsonDecode(data);
-    } else {
-      return (response.statusCode);
+    for (String crypto in cryptoList) {
+      String requestURL =
+          '$coinAPIURL/$crypto/$selectedCurrency?apikey=$apiKey';
+      http.Response response = await http.get(requestURL);
+
+      if (response.statusCode == 200) {
+        var decodedData = jsonDecode(response.body);
+        double lastPrice = decodedData['rate'];
+        cryptoPrices[crypto] = lastPrice.toStringAsFixed(0);
+      }
     }
+
+    return cryptoPrices;
   }
 }
